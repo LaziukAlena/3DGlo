@@ -20,22 +20,20 @@ const timer = (deadline) => {
 
     return { timeRemaining, hours, minutes, seconds };
   };
+
   const updateClock = () => {
     let getTime = getTimeRemaining();
 
     timerHours.textContent = formatTime(getTime.hours);
     timerMinutes.textContent = formatTime(getTime.minutes);
     timerSeconds.textContent = formatTime(getTime.seconds);
-  };
 
-  const intervalId = setInterval(() => {
-    updateClock();
-
-    const time = getTimeRemaining();
-    if (time.timeRemaining <= 0) {
+    if (getTime.timeRemaining <= 0) {
       clearInterval(intervalId);
     }
-  }, 1000);
+  };
+
+  const intervalId = setInterval(updateClock, 1000);
 
   updateClock();
 };
