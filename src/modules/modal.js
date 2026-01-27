@@ -1,7 +1,5 @@
 const modal = () => {
   const modal = document.querySelector(".popup");
-  const buttons = document.querySelectorAll(".popup-btn");
-  const closeBtn = modal.querySelector(".popup-close");
 
   const openModal = () => {
     modal.style.display = "block";
@@ -31,14 +29,16 @@ const modal = () => {
     modal.style.opacity = 0;
   };
 
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", openModal);
+  // 1 обработчик — делегирование для кнопок открытия
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".popup-btn")) {
+      openModal();
+    }
   });
 
-  closeBtn.addEventListener("click", closeModal);
-
+  // 2 обработчик — всё закрытие модалки
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
+    if (e.target.classList.contains("popup-close") || e.target === modal) {
       closeModal();
     }
   });
