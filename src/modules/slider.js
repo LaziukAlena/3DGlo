@@ -1,28 +1,42 @@
 const slider = () => {
   const sliderBlock = document.querySelector(".portfolio-content");
   const slides = document.querySelectorAll(".portfolio-item");
-  const dots = document.querySelectorAll(".dot");
   const timeInterval = 2000;
 
   let currentSlide = 0;
   let interval;
 
-  const prevSlide = (elems, index, strClass) => {
-    elems[index].classList.remove(strClass);
+  const dotsWrapper = document.createElement("ul");
+  dotsWrapper.classList.add("portfolio-dots");
+
+  slides.forEach((_, index) => {
+    const dot = document.createElement("li");
+    dot.classList.add("dot");
+
+    if (index === 0) {
+      dot.classList.add("dot-active");
+    }
+
+    dotsWrapper.append(dot);
+  });
+
+  sliderBlock.append(dotsWrapper);
+
+  const dots = dotsWrapper.querySelectorAll(".dot");
+
+  const prevSlide = (elems, index, className) => {
+    elems[index].classList.remove(className);
   };
 
-  const nextSlide = (elems, index, strClass) => {
-    elems[index].classList.add(strClass);
+  const nextSlide = (elems, index, className) => {
+    elems[index].classList.add(className);
   };
 
   const autoSlide = () => {
     prevSlide(slides, currentSlide, "portfolio-item-active");
     prevSlide(dots, currentSlide, "dot-active");
-    currentSlide++;
 
-    if (currentSlide >= slides.length) {
-      currentSlide = 0;
-    }
+    currentSlide = (currentSlide + 1) % slides.length;
 
     nextSlide(slides, currentSlide, "portfolio-item-active");
     nextSlide(dots, currentSlide, "dot-active");
@@ -40,9 +54,8 @@ const slider = () => {
   sliderBlock.addEventListener("click", (e) => {
     e.preventDefault();
 
-    if (!e.target.matches(".dot, .portfolio-btn")) {
-      return;
-    }
+    if (!e.target.matches(".dot, .portfolio-btn")) return;
+
     stopSlide();
 
     prevSlide(slides, currentSlide, "portfolio-item-active");
@@ -53,18 +66,11 @@ const slider = () => {
     } else if (e.target.matches("#arrow-left")) {
       currentSlide--;
     } else if (e.target.classList.contains("dot")) {
-      dots.forEach((dot, index) => {
-        if (e.target === dot) {
-          currentSlide = index;
-        }
-      });
+      currentSlide = [...dots].indexOf(e.target);
     }
-    if (currentSlide >= slides.length) {
-      currentSlide = 0;
-    }
-    if (currentSlide < 0) {
-      currentSlide = slides.length - 1;
-    }
+
+    if (currentSlide >= slides.length) currentSlide = 0;
+    if (currentSlide < 0) currentSlide = slides.length - 1;
 
     nextSlide(slides, currentSlide, "portfolio-item-active");
     nextSlide(dots, currentSlide, "dot-active");
@@ -84,13 +90,13 @@ const slider = () => {
     "mouseleave",
     (e) => {
       if (e.target.matches(".dot, .portfolio-btn")) {
-        startSlide(timeInterval);
+        startSlide();
       }
     },
     true,
   );
 
-  startSlide(timeInterval);
+  startSlide();
 };
 
 export default slider;
