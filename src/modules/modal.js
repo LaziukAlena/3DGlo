@@ -1,27 +1,26 @@
+import { animate } from "./helpers.js";
+
 const modal = () => {
   const modal = document.querySelector(".popup");
 
   const openModal = () => {
     modal.style.display = "block";
 
+    // Для мобильных — без анимации
     if (window.innerWidth < 768) {
       modal.style.opacity = 1;
       return;
     }
 
-    let opacity = 0;
-    modal.style.opacity = opacity;
-
-    const fadeIn = () => {
-      opacity += 0.02;
-      modal.style.opacity = opacity;
-
-      if (opacity < 1) {
-        requestAnimationFrame(fadeIn);
-      }
-    };
-
-    requestAnimationFrame(fadeIn);
+    animate({
+      duration: 500,
+      timing(timeFraction) {
+        return timeFraction;
+      },
+      draw(progress) {
+        modal.style.opacity = progress;
+      },
+    });
   };
 
   const closeModal = () => {
@@ -29,14 +28,14 @@ const modal = () => {
     modal.style.opacity = 0;
   };
 
-  // 1 обработчик — делегирование для кнопок открытия
+  // Делегирование открытия
   document.addEventListener("click", (e) => {
     if (e.target.closest(".popup-btn")) {
       openModal();
     }
   });
 
-  // 2 обработчик — всё закрытие модалки
+  // Закрытие модалки
   modal.addEventListener("click", (e) => {
     if (e.target.classList.contains("popup-close") || e.target === modal) {
       closeModal();
