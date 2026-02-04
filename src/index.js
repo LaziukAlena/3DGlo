@@ -5,11 +5,28 @@ import validate from "./modules/validate.js";
 import tabs from "./modules/tabs.js";
 import slider from "./modules/slider.js";
 import calc from "./modules/calc.js";
+import sendForm from "./modules/sendForm.js";
 
-timer("31 january 2026");
+timer("31 march 2026");
 menu();
 modal();
 validate();
 tabs();
 slider();
-calc();
+calc(100);
+sendForm({
+  formId: "form1",
+  someElem: [
+    {
+      type: "block",
+      id: "total",
+    },
+  ],
+});
+sendForm({
+  formId: "form2",
+});
+
+sendForm({
+  formId: "form3",
+});
